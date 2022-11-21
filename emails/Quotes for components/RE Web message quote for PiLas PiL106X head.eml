@@ -1,0 +1,964 @@
+Return-Path: <Bruno.Lefevre@nktphotonics.com>
+Received: from morpheus.tlabs.ac.za ([unix socket])
+	 by morpheus (Cyrus 2.5.8) with LMTPA;
+	 Wed, 12 Oct 2022 06:59:41 +0200
+X-Sieve: CMU Sieve 2.4
+Envelope-to: rkuriakose@tlabs.ac.za
+Received: from poso.tlabs.ac.za ([196.24.232.37]:48846)
+	by morpheus.tlabs.ac.za with esmtps (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+	(Exim 4.87 (FreeBSD))
+	(envelope-from <Bruno.Lefevre@nktphotonics.com>)
+	id 1oiTqC-000H9g-5r
+	for rkuriakose@tlabs.ac.za; Wed, 12 Oct 2022 06:59:36 +0200
+Received: from mail-vi1eur05on2118.outbound.protection.outlook.com ([40.107.21.118]:59201 helo=EUR05-VI1-obe.outbound.protection.outlook.com)
+	by poso.tlabs.ac.za with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.86_2)
+	(envelope-from <Bruno.Lefevre@nktphotonics.com>)
+	id 1oiTpn-0006pU-JY
+	for rkuriakose@tlabs.ac.za; Wed, 12 Oct 2022 06:59:21 +0200
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fqNgMPXaMMZ4vHNYBV7lYGJ9eKAZB4DPpsfB/04VNWJXKNIlHo/kSe9AyQ/1diwgpe3RkkKOQzFhahEnau1OGt1Ezu70ZAeus55niSfDmaeOAeo30v85Nfkv+XiDXnBpykouFiJIQZGGOUkrixdMh9CO8ibX1FyJO2vDzt36sepNaksz05Yyz8M6upqTmT3OaX13QhgMJaSsDC3BOirOzOZRFaUkUaje6WSRGqRr8WwcGIvPwGt84uO8PgDaz9you4Gm8vIpZVlw0yesjRBuS6M3IeAF2EX+kvMMwek6RHj8KTg7EllJY9CeZWjuwg3+nDNtbKk2+5buMu9LTHBL2g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=EesAkCjtH1Ij1mowI1PsRQjFwTBoQ7tuB+73J1vmVj4=;
+ b=nTIEv2yKf7bWWgA1AWTP6T2Fo5sSR27wBKO7vWy5VtGhhLFtyhLkSs3uDsYOq6iM0Wm++jxjGsuA0l7SOmW/6wonb2/wgFmfdEhSX/D6hzAI+zs0ZtkSXxSHijz1SxGHklQTXwgAcNENwKqpV8PeUd945R2Nur8i6RX+czhnP6m06kO/69pwbHTmjfsykqNsQrOxPELcvoNnR6JkzpxuYl4dJlQMA2dcYKZAYgc1xvClXwDfTCdy5pe+MnuIHzQnWsFpNsHHqkYV2vK4v3+ABr58U0XXpm/C5GL3iQvlOWJfTN8daZrgJpxIVcxSql9tIUKoF2UuD4LkcJLI6pciIQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nktphotonics.com; dmarc=pass action=none
+ header.from=nktphotonics.com; dkim=pass header.d=nktphotonics.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nktphotonics.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EesAkCjtH1Ij1mowI1PsRQjFwTBoQ7tuB+73J1vmVj4=;
+ b=Vegw1Yk6oWa/IyA0TX8tP797G0anm+3SP4ExxMeIo5SJaSDopQaQ4m6ESSfkxadMRFWC42X3KZCmtlzriVy/RZ+PBd/XVo3O9I0pw81Hp0VEW0fbOKmBjh0uMJCpPj7qia+5jQBfGfr7fPRDbI4enzL53mH2NQkv+0OCVvoUj84=
+Received: from PR3PR02MB6442.eurprd02.prod.outlook.com (2603:10a6:102:7a::8)
+ by DB9PR02MB8370.eurprd02.prod.outlook.com (2603:10a6:10:399::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5676.28; Wed, 12 Oct
+ 2022 04:58:59 +0000
+Received: from PR3PR02MB6442.eurprd02.prod.outlook.com
+ ([fe80::3441:8527:eb7c:cf42]) by PR3PR02MB6442.eurprd02.prod.outlook.com
+ ([fe80::3441:8527:eb7c:cf42%5]) with mapi id 15.20.5709.015; Wed, 12 Oct 2022
+ 04:58:58 +0000
+From: =?iso-8859-1?Q?Bruno_Lef=E8vre?= <Bruno.Lefevre@nktphotonics.com>
+To: "rkuriakose@tlabs.ac.za" <rkuriakose@tlabs.ac.za>
+Subject: RE: Web message: quote for PiLas PiL106X head
+Thread-Topic: Web message: quote for PiLas PiL106X head
+Thread-Index: AQHY3bQ/AaVOJ1HHnUKYi5VQzTdQgq4KMmAw
+Date: Wed, 12 Oct 2022 04:58:58 +0000
+Message-ID:
+ <PR3PR02MB64426BB6CD0637213A917CA29E229@PR3PR02MB6442.eurprd02.prod.outlook.com>
+References: <oWMs9TLOocgFo1lsty7rLeEZHe1RGhiVlQci1BdUF8@www.nktphotonics.com>
+In-Reply-To: <oWMs9TLOocgFo1lsty7rLeEZHe1RGhiVlQci1BdUF8@www.nktphotonics.com>
+Accept-Language: fr-FR, en-US
+Content-Language: en-US
+X-MS-Has-Attach: yes
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nktphotonics.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PR3PR02MB6442:EE_|DB9PR02MB8370:EE_
+x-ms-office365-filtering-correlation-id: 7cd394bf-dcf1-4e4f-d283-08daac0e7923
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ tDsp9lfaeN2zz6lSbpQ5PSQpK1aNSrCUVHKFdS85xQ5t3oOUyfdCWh/Pv6hM7kBHYy5EkgXozClzH9GUHya7XvjFx5pOqqzLzCMRoWZfiKzKuk2N57PQwbCMkOiCOdUCjsqjeY/7V/RHsLdTLWYscrrnq8K6Z/YPLFx9T31OHZq1uUliAjgW6plrNPf0givrlGgmRIzW9iSfJmeeZWQpE7T98uXdYGeeviXR0nbx5XpyUfX32wQ10thZgZC1/Xg8X/ZCKVtIETLzpvh5VcEWiKXJBUhwALWq7VzXl6I72ZvUjIpbTAoTJDy99NIuLwVkNlZ9hhsta8J0XKF4qCC+0iuXRFEbeMfW59HoJBXq1qYiKU9mJ8AhUScXpuRTCHUHlKWSDiM/LZUP4UND1yJdRRRNrYyMLJA3txH16Y+y34nziK8yLj+rwL5NaK2e3b+bpoOg4YFpkO432HaMHtLjQ79GJkTV7hVRduMw4HiIXCkKaBsAmetyVJeCQqdzdEPCFsOkJCL4shwSpdbWy3HSn3ZS8xwN1jtVEBYt2JuBZHPZ9CmKH1/pkqyVcOVVcaECDRfXP9auH35lnsQpwRvUOo5QEvRC8Ria3+GicEnGchTQJU1DSVEPZFlIIYqfYy2SV6exDQTVjYI/7IxeC+Ja5pWZJ/3xDVX7rNw9LRDjxLtjk2/rjlu1I2e5lCc4G4oaS3MmKKs91XF33ynfZG92r6omJGgMH2t4C7cBF5HPgA9xMOdhbngFEj4Xgl/dZTYIAUDgodtUElKwJRBKJcBJ8EzY/08ZjgTOp89A8J4LmOoHdLlYNx5Yf0giVPgSA+zK5ZVtwNCGDElxeDArctjrpg==
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PR3PR02MB6442.eurprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(6029001)(4636009)(136003)(366004)(39850400004)(376002)(346002)(396003)(451199015)(52536014)(53546011)(122000001)(166002)(66899015)(38070700005)(26005)(8936002)(9686003)(33656002)(6506007)(71200400001)(5660300002)(7696005)(66574015)(38100700002)(66946007)(76116006)(83380400001)(2906002)(41300700001)(64756008)(6916009)(15650500001)(66556008)(478600001)(316002)(55016003)(66476007)(99936003)(8676002)(86362001)(186003)(966005)(66446008);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-1?Q?DBU+uRQECg1aJliSR5YrRGBwJlx9sNB62YIy5PLiJyzTubyvtzRF5JyOSD?=
+ =?iso-8859-1?Q?W90LxptEmnMzUm7Rj9OfljQKWumDXzFF+NSg6bTwuw5/tk5XCnmiYLuHN/?=
+ =?iso-8859-1?Q?HnAJjJrwFxMKoF6kD4dzRaVSWvxU8HY7PD7y98QwRBix1zLV/5uKbDQaaC?=
+ =?iso-8859-1?Q?2AxjZgxDjrVLKgxNmGHSkqIvGNf3hXjvK0YZmxvLtU44zhOxF86YGEs9Z9?=
+ =?iso-8859-1?Q?mjdi08IvmqxtrFLkMLLB8ZKsbDoyclJtd7dplsL4yycgrgLP3habooukDT?=
+ =?iso-8859-1?Q?7DeGm14ojOn7XT8df1BBsDmPcJ8ousWIxX6go81omxEujiq7AYmGz/5Fib?=
+ =?iso-8859-1?Q?ttxjOqkGuQyoazKrf8V9cSzSVHzO89zmYlBgz6XZYsFJ/3FO9I5bF35IiS?=
+ =?iso-8859-1?Q?Eo06M+aR5yR195g9I0f0KUUwQdwYTKzlfu341dRMvpJzml34QwtfxpnwkS?=
+ =?iso-8859-1?Q?BOeOaCuzXGPTCwhwt5FqF6pIM6PK7W/3WoYdbGYBNcF8TBFtWogLEU9msO?=
+ =?iso-8859-1?Q?op6rrDz85hXFvTm0BbmBE3Zk/4/TV/K+A40fNKRT/dr3c5p/Cp9VivqOya?=
+ =?iso-8859-1?Q?VU6Kme6wqPsA8VmM6AvzTS41YnKR9RtH9Fd6jJsYFf6kkcXeA4MhLI5MS5?=
+ =?iso-8859-1?Q?GlytAcOsdko2RXHm09N7O7B1San6aFtfftQDPparvflfKT2XAlgz8gC/YM?=
+ =?iso-8859-1?Q?DMyE+0jQENgp6Mfv6Td9g6bHjQ6fJfRPWRSXdcLgZnx4s7qU8SB6VUzIP3?=
+ =?iso-8859-1?Q?zQ9XIrpTJOV0LFcg4RIdmm5fd2kT/Z267nT9TN6amdRS3QpqqiAbfk/Dv2?=
+ =?iso-8859-1?Q?BrEp2GSxMCrKUcB0wSIx8lotj0CBKM+pNudVQnT+W2I2+cP4rlTenfKLyU?=
+ =?iso-8859-1?Q?JhE745/ybEG12CE0jEbenno+EMeCbEThyypwcrUGhTw0m9or7LIGtZ0nO1?=
+ =?iso-8859-1?Q?HOhhZ0IYs9MaEg8KFpj3rNmtbd+sO7cAThy0kMV3HFTgjdncHRRuRBiHLi?=
+ =?iso-8859-1?Q?gAC9O1XSG/KlAEcx2PhXD7tfHJEYgT/ZdnVS34+4kJXa6oAPuwm6NSmFZT?=
+ =?iso-8859-1?Q?s3ejKhYuuhAzZ1Izo6CZ75F2xHpZZvAxu0G8CLpjpyHSYWUoEv9/B3hpNx?=
+ =?iso-8859-1?Q?EcvjqhIavLH/gzOZWdUsyoJ3PqCj8echFMrI39st1vRQn0n0ZJ6kIsGl7t?=
+ =?iso-8859-1?Q?ENPYWwPc/NvEMzliMs6tKOxDrtnhY9myZjMWBoCiPtOutt77nR6fNGGmiC?=
+ =?iso-8859-1?Q?6UpGjFisKy8FH/gbDnl6965juLsYoZib+Y95CcqaeEb2T1CuPE7ofrURJe?=
+ =?iso-8859-1?Q?e/EXxo24q9pWVjLAfL6sWrwO/UmJURcNOV5oE2G1ZsS/pH0u9dlTGdcwar?=
+ =?iso-8859-1?Q?QoC5q8XZNIJ5at6An2Bj7zflQcM8VMibuBPgX34q1xWnSZxu0hR7XsonVk?=
+ =?iso-8859-1?Q?vSLPK7Qp0g8/nUzuyFDS6rnEtLf+GBIezfpqHcvEUfT2KRnZfI0sZyR5SD?=
+ =?iso-8859-1?Q?7ZKJDq4ebNHEZ/0DrqZUn+eZWWTbZTFzfwdpzSJ8+Zh+Rb7PQTJxBcgP/1?=
+ =?iso-8859-1?Q?9OiBqAe+E32ZNxPAyQIVweMQ1scunBob5pze2oXxVpX6KYgkADyRbSngys?=
+ =?iso-8859-1?Q?33QZe5kvPgzwvwbQtlFzJ0sQL/j1KE9jRA?=
+Content-Type: multipart/related;
+	boundary="_007_PR3PR02MB64426BB6CD0637213A917CA29E229PR3PR02MB6442eurp_";
+	type="multipart/alternative"
+MIME-Version: 1.0
+X-OriginatorOrg: nktphotonics.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PR3PR02MB6442.eurprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7cd394bf-dcf1-4e4f-d283-08daac0e7923
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Oct 2022 04:58:58.7788
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a0dffdfb-71d1-49d9-8f00-15e03257d706
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: q+nqEfrBHT8CqLs3dU5rdqpkjWb3/LefdrSywfugVfXfEOaNFRAy6FBpoXq647u/09j8wg663ko05B6Y0x7C3Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR02MB8370
+X-DKIM: DKIM passed: (address=Bruno.Lefevre@nktphotonics.com domain=nktphotonics.com), signature is good.
+X-TLABS-GW-MailScanner-Information: Please contact iThemba LABS for more information
+X-TLABS-GW-MailScanner-ID: 1oiTpn-0006pU-JY
+X-TLABS-GW-MailScanner: Found to be clean
+X-TLABS-GW-MailScanner-From: bruno.lefevre@nktphotonics.com
+X-Spam-Status: No, No
+X-TLABS-MailScanner-Information: Please contact iThemba LABS for more information
+X-TLABS-MailScanner-ID: 1oiTqC-000H9g-5r
+X-TLABS-MailScanner: Found to be clean
+X-TLABS-MailScanner-SpamCheck: not spam, SpamAssassin (not cached,
+	score=7.33, required 8, DKIM_SIGNED 0.10, DKIM_VALID -0.10,
+	DKIM_VALID_AU -0.10, HTML_MESSAGE 0.00, LONGWORD 0.30,
+	MEGALONGWORD 0.60, MR_NOT_ATTRIBUTED_IP 0.20,
+	MR_STRANGE_QUESTION 1.50, RCVD_IN_AHBL 0.50, RCVD_IN_AHBL_PROXY 0.20,
+	RCVD_IN_AHBL_RTB 0.01, RCVD_IN_AHBL_SMTP 0.20,
+	RCVD_IN_AHBL_SPAM 0.50, RCVD_IN_WSFF 1.00, SPF_FAIL 0.92,
+	VOWEL_FROM_5 0.50, VOWEL_URI_5 1.00)
+X-TLABS-MailScanner-SpamScore: sssssss
+X-TLABS-MailScanner-From: bruno.lefevre@nktphotonics.com
+X-TLABS-MailScanner-To: rkuriakose@tlabs.ac.za
+
+--_007_PR3PR02MB64426BB6CD0637213A917CA29E229PR3PR02MB6442eurp_
+Content-Type: multipart/alternative;
+	boundary="_000_PR3PR02MB64426BB6CD0637213A917CA29E229PR3PR02MB6442eurp_"
+
+--_000_PR3PR02MB64426BB6CD0637213A917CA29E229PR3PR02MB6442eurp_
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+
+Dear Rony
+Thanks for your request and interest for our products and company
+PiLAS 1060nm diode is at 6900EUR for the free space version and            =
+           8500EUR for the fiber coupled FC/APC version. You have to add 36=
+00EUR for the control unit. Prices are Exworks Berlin Germany. If you need =
+a formal quote, let me know.
+Best regards
+Bruno
+
+
+Bruno Lef=E8vre
+Senior Sales Manager - Scientific & Distribution
+Europe, Middle East & Africa
+
+
+NKT Photonics A/S
+Bregner=F8dvej 144 og Blokken 84 * 3460 Birker=F8d * Denmark
+Phone: +33 (0) 7 698 697 13 - Fax: +45 4348 3901
+Email: brle@nktphotonics.com<mailto:brle@nktphotonics.com> - www.nktphotoni=
+cs.com<http://www.nktphotonics.com/>
+
+[LinkedIN_icon]<https://www.linkedin.com/company/nkt-photonics>  [twitter_i=
+con] <https://twitter.com/NKT_Photonics>   [Google_plus_icon] <https://plus=
+.google.com/+Nktphotonics>
+---------------------------------------------------------------------------=
+----------------------------
+[cid:image004.png@01D8DE08.188C1D50]
+SuperK & Fianium white light lasers for optical characterization and bioima=
+ging
+Onefive ultrafast lasers for imaging and material processing
+aeroGAIN gain modules & fibers for high peak power fiber lasers
+Koheras low noise lasers for sensing and metrology
+LIOS distributed temperature sensing systems
+
+DISCLAIMER: This e-mail and accompanying documents contain privileged confi=
+dential information. The information is intended only for the recipient(s) =
+named. Any unauthorised disclosure, copying, distribution, exploitation or =
+the taking of any action in reliance of the content of this e-mail is stric=
+tly prohibited. If you have received this e-mail in error we would be oblig=
+ed if you would delete the e-mail and attachments and notify the dispatcher=
+ by return e-mail or at +45 4348 3900
+
+
+
+
+
+
+
+From: rony kuriakose <nktphotonics2021@peytzsend.com>
+Sent: 11. oktober 2022 22:59
+To: Sales-EU <sales-eu@nktphotonics.com>
+Subject: Web message: quote for PiLas PiL106X head
+
+First name
+
+rony
+Last name
+
+kuriakose
+Subject
+
+quote for PiLas PiL106X head
+Email
+
+rkuriakose@tlabs.ac.za<mailto:rkuriakose@tlabs.ac.za>
+Phone
+
+0027767947516
+Message
+
+I want a quote for the component mentioned in subject line
+Region
+
+Europe / Middle East / Africa
+Country
+
+South africa
+Newsletter
+
+
+  *   Sign up to our newsletter and stay in the loop. We keep your name and=
+ email according to our privacy policy<https://eur01.safelinks.protection.o=
+utlook.com/?url=3Dhttps%3A%2F%2Fwww.nktphotonics.com%2Fprivacy-policy%2F&da=
+ta=3D05%7C01%7CBruno.Lefevre%40nktphotonics.com%7C34c70a8cfa54489612a508daa=
+bcb607b%7Ca0dffdfb71d149d98f0015e03257d706%7C0%7C0%7C638011187234250752%7CU=
+nknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLC=
+JXVCI6Mn0%3D%7C3000%7C%7C%7C&sdata=3DpTWY5oLjIT6%2FP3JWL%2BDL%2Fw3tDzsNKTgQ=
+FGBFaXeEDIU%3D&reserved=3D0> and you can unsubscribe at any time.
+Generated on: https://www.nktphotonics.com/contact/
+
+--_000_PR3PR02MB64426BB6CD0637213A917CA29E229PR3PR02MB6442eurp_
+Content-Type: text/html; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+
+<html xmlns:v=3D"urn:schemas-microsoft-com:vml" xmlns:o=3D"urn:schemas-micr=
+osoft-com:office:office" xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
+xmlns:m=3D"http://schemas.microsoft.com/office/2004/12/omml" xmlns=3D"http:=
+//www.w3.org/TR/REC-html40">
+<head>
+<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Diso-8859-=
+1">
+<meta name=3D"Generator" content=3D"Microsoft Word 15 (filtered medium)">
+<!--[if !mso]><style>v\:* {behavior:url(#default#VML);}
+o\:* {behavior:url(#default#VML);}
+w\:* {behavior:url(#default#VML);}
+.shape {behavior:url(#default#VML);}
+</style><![endif]-->
+<title>Web message: quote for PiLas PiL106X head</title>
+<style><!--
+/* Font Definitions */
+@font-face
+	{font-family:Wingdings;
+	panose-1:5 0 0 0 0 0 0 0 0 0;}
+@font-face
+	{font-family:"Cambria Math";
+	panose-1:2 4 5 3 5 4 6 3 2 4;}
+@font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;}
+@font-face
+	{font-family:"Proxima Nova";
+	panose-1:2 0 5 6 3 0 0 2 0 4;}
+/* Style Definitions */
+p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0cm;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;}
+a:link, span.MsoHyperlink
+	{mso-style-priority:99;
+	color:blue;
+	text-decoration:underline;}
+span.EmailStyle20
+	{mso-style-type:personal-reply;
+	font-family:"Proxima Nova";
+	color:windowtext;}
+.MsoChpDefault
+	{mso-style-type:export-only;
+	font-size:10.0pt;}
+@page WordSection1
+	{size:612.0pt 792.0pt;
+	margin:72.0pt 72.0pt 72.0pt 72.0pt;}
+div.WordSection1
+	{page:WordSection1;}
+/* List Definitions */
+@list l0
+	{mso-list-id:842670531;
+	mso-list-template-ids:-989853108;}
+@list l0:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:10.0pt;
+	font-family:Symbol;}
+@list l0:level2
+	{mso-level-number-format:bullet;
+	mso-level-text:o;
+	mso-level-tab-stop:72.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:10.0pt;
+	font-family:"Courier New";
+	mso-bidi-font-family:"Times New Roman";}
+@list l0:level3
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0A7;
+	mso-level-tab-stop:108.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:10.0pt;
+	font-family:Wingdings;}
+@list l0:level4
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0A7;
+	mso-level-tab-stop:144.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:10.0pt;
+	font-family:Wingdings;}
+@list l0:level5
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0A7;
+	mso-level-tab-stop:180.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:10.0pt;
+	font-family:Wingdings;}
+@list l0:level6
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0A7;
+	mso-level-tab-stop:216.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:10.0pt;
+	font-family:Wingdings;}
+@list l0:level7
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0A7;
+	mso-level-tab-stop:252.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:10.0pt;
+	font-family:Wingdings;}
+@list l0:level8
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0A7;
+	mso-level-tab-stop:288.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:10.0pt;
+	font-family:Wingdings;}
+@list l0:level9
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0A7;
+	mso-level-tab-stop:324.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:10.0pt;
+	font-family:Wingdings;}
+ol
+	{margin-bottom:0cm;}
+ul
+	{margin-bottom:0cm;}
+--></style><!--[if gte mso 9]><xml>
+<o:shapedefaults v:ext=3D"edit" spidmax=3D"1026" />
+</xml><![endif]--><!--[if gte mso 9]><xml>
+<o:shapelayout v:ext=3D"edit">
+<o:idmap v:ext=3D"edit" data=3D"1" />
+</o:shapelayout></xml><![endif]-->
+</head>
+<body lang=3D"DA" link=3D"blue" vlink=3D"purple" style=3D"word-wrap:break-w=
+ord">
+<div class=3D"WordSection1">
+<p class=3D"MsoNormal"><span style=3D"font-family:&quot;Proxima Nova&quot;;=
+mso-fareast-language:EN-US">Dear Rony<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"font-family:&quot;Prox=
+ima Nova&quot;;mso-fareast-language:EN-US">Thanks for your request and inte=
+rest for our products and company<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"font-family:&quot;Prox=
+ima Nova&quot;;mso-fareast-language:EN-US">PiLAS 1060nm diode is at 6900EUR=
+ for the free space version and &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
+nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
+p;&nbsp; 8500EUR for the fiber coupled FC/APC version. You have to add 3600=
+EUR
+ for the control unit. Prices are Exworks Berlin Germany. If you need a for=
+mal quote, let me know.
+<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"font-family:&quot;Prox=
+ima Nova&quot;;mso-fareast-language:EN-US">Best regards<o:p></o:p></span></=
+p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"font-family:&quot;Prox=
+ima Nova&quot;;mso-fareast-language:EN-US">Bruno&nbsp;
+<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"font-family:&quot;Proxima Nova&quot;"=
+><o:p>&nbsp;</o:p></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"color:black"><o:p>&nbs=
+p;</o:p></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"color:black">Bruno Lef=
+=E8vre<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"font-size:9.0pt;color:=
+maroon">Senior Sales Manager - Scientific &amp; Distribution<o:p></o:p></sp=
+an></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"font-size:9.0pt;color:=
+gray">Europe, Middle East &amp; Africa<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"font-size:9.0pt;color:=
+gray"><o:p>&nbsp;</o:p></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"font-size:9.0pt;color:=
+gray"><o:p>&nbsp;</o:p></span></p>
+<p class=3D"MsoNormal" style=3D"margin-bottom:12.0pt"><span style=3D"color:=
+maroon">NKT Photonics A/S</span><br>
+<span style=3D"font-size:9.0pt;color:gray">Bregner=F8dvej 144 og Blokken 84=
+ &#8226; 3460 Birker=F8d &#8226; Denmark<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span lang=3D"FR" style=3D"font-size:9.0pt;color:#76=
+7171">Phone: +33 (0) 7&nbsp;698 697 13 - Fax: +45 4348 3901<o:p></o:p></spa=
+n></p>
+<p class=3D"MsoNormal"><span lang=3D"FR" style=3D"font-size:9.0pt;color:#76=
+7171">Email:
+</span><span lang=3D"FR"><a href=3D"mailto:brle@nktphotonics.com"><span sty=
+le=3D"font-size:9.0pt;color:#767171">brle@nktphotonics.com</span></a></span=
+><span lang=3D"FR" style=3D"font-size:9.0pt;color:#767171"> &#8211;
+</span><span lang=3D"FR"><a href=3D"http://www.nktphotonics.com/"><span sty=
+le=3D"font-size:9.0pt;color:#767171">www.nktphotonics.com</span></a></span>=
+<u><span lang=3D"FR" style=3D"font-size:9.0pt;color:#767171">
+<o:p></o:p></span></u></p>
+<p class=3D"MsoNormal"><span lang=3D"FR" style=3D"color:gray"><o:p>&nbsp;</=
+o:p></span></p>
+<p class=3D"MsoNormal" style=3D"margin-bottom:12.0pt"><a href=3D"https://ww=
+w.linkedin.com/company/nkt-photonics"><span lang=3D"EN-US" style=3D"color:#=
+1F497D;text-decoration:none"><img border=3D"0" width=3D"20" height=3D"20" s=
+tyle=3D"width:.2083in;height:.2083in" id=3D"Picture_x0020_1" src=3D"cid:ima=
+ge001.jpg@01D8DE08.188C1D50" alt=3D"LinkedIN_icon"></span></a><span lang=3D=
+"EN-US" style=3D"color:#1F497D">&nbsp;
+</span><a href=3D"https://twitter.com/NKT_Photonics"><span lang=3D"EN-US" s=
+tyle=3D"color:#1F497D;text-decoration:none"><img border=3D"0" width=3D"20" =
+height=3D"20" style=3D"width:.2083in;height:.2083in" id=3D"Picture_x0020_32=
+" src=3D"cid:image002.jpg@01D8DE08.188C1D50" alt=3D"twitter_icon"></span></=
+a><span style=3D"color:#1F497D">&nbsp;
+</span><a href=3D"https://plus.google.com/+Nktphotonics"><span lang=3D"EN-U=
+S" style=3D"color:#1F497D;text-decoration:none"><img border=3D"0" width=3D"=
+20" height=3D"20" style=3D"width:.2083in;height:.2083in" id=3D"Picture_x002=
+0_33" src=3D"cid:image003.jpg@01D8DE08.188C1D50" alt=3D"Google_plus_icon"><=
+/span></a><u><span lang=3D"EN-US" style=3D"font-size:9.0pt;color:gray"><o:p=
+></o:p></span></u></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"color:gray">----------=
+---------------------------------------------------------------------------=
+------------------</span><span lang=3D"EN-US" style=3D"font-size:9.0pt;colo=
+r:gray"><o:p></o:p></span></p>
+<table class=3D"MsoNormalTable" border=3D"0" cellspacing=3D"0" cellpadding=
+=3D"0" width=3D"701" style=3D"width:525.6pt;border-collapse:collapse">
+<tbody>
+<tr style=3D"page-break-inside:avoid;height:2.0cm">
+<td width=3D"299" valign=3D"top" style=3D"width:224.4pt;padding:0cm 5.4pt 0=
+cm 0cm;height:2.0cm">
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D"><img border=3D"0" widt=
+h=3D"289" height=3D"69" style=3D"width:3.0069in;height:.7222in" id=3D"Pictu=
+re_x0020_31" src=3D"cid:image004.png@01D8DE08.188C1D50"><o:p></o:p></span><=
+/p>
+</td>
+<td width=3D"402" valign=3D"top" style=3D"width:301.2pt;padding:0cm 5.4pt 0=
+cm 5.4pt;height:2.0cm">
+<p class=3D"MsoNormal"><b><span lang=3D"EN-US" style=3D"font-size:9.0pt;col=
+or:gray">SuperK &amp; Fianium</span></b><span lang=3D"EN-US" style=3D"font-=
+size:9.0pt;color:gray"> white light lasers for optical characterization and=
+ bioimaging<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><b><span lang=3D"EN-US" style=3D"font-size:9.0pt;col=
+or:gray">Onefive</span></b><span lang=3D"EN-US" style=3D"font-size:9.0pt;co=
+lor:gray"> ultrafast lasers for imaging and material processing
+<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><b><span lang=3D"EN-GB" style=3D"font-size:9.0pt;col=
+or:gray">aeroGAIN</span></b><span lang=3D"EN-GB" style=3D"font-size:9.0pt;c=
+olor:gray"> gain modules &amp; fibers for high peak power fiber lasers
+<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><b><span lang=3D"EN-US" style=3D"font-size:9.0pt;col=
+or:gray">Koheras</span></b><span lang=3D"EN-US" style=3D"font-size:9.0pt;co=
+lor:gray"> low noise lasers for sensing and metrology<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><b><span style=3D"font-size:9.0pt;color:gray">LIOS</=
+span></b><span style=3D"font-size:9.0pt;color:gray"> distributed temperatur=
+e sensing systems<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"font-size:9.0pt;color:gray"><o:p>&nbs=
+p;</o:p></span></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class=3D"MsoNormal"><span lang=3D"EN-GB" style=3D"font-size:7.5pt;font-f=
+amily:&quot;Arial&quot;,sans-serif;color:#A6A6A6">DISCLAIMER: This e-mail a=
+nd accompanying documents contain privileged confidential information. The =
+information is intended only for the recipient(s)
+ named. Any unauthorised disclosure, copying, distribution, exploitation or=
+ the taking of any action in reliance of the content of this e-mail is stri=
+ctly prohibited. If you have received this e-mail in error we would be obli=
+ged if you would delete the e-mail
+ and attachments and notify the dispatcher by return e-mail or at +45 4348 =
+3900</span><span lang=3D"EN-GB" style=3D"font-size:7.5pt;font-family:&quot;=
+Arial&quot;,sans-serif;color:#A6A6A6"><o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"color:#1F497D"><o:p>&n=
+bsp;</o:p></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-GB"><o:p>&nbsp;</o:p></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"font-size:12.0pt"><o:p=
+>&nbsp;</o:p></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US"><o:p>&nbsp;</o:p></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"font-family:&quot;Prox=
+ima Nova&quot;"><o:p>&nbsp;</o:p></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"font-family:&quot;Prox=
+ima Nova&quot;;mso-fareast-language:EN-US"><o:p>&nbsp;</o:p></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"font-family:&quot;Prox=
+ima Nova&quot;;mso-fareast-language:EN-US"><o:p>&nbsp;</o:p></span></p>
+<div>
+<div style=3D"border:none;border-top:solid #E1E1E1 1.0pt;padding:3.0pt 0cm =
+0cm 0cm">
+<p class=3D"MsoNormal"><b><span lang=3D"EN-US">From:</span></b><span lang=
+=3D"EN-US"> rony kuriakose &lt;nktphotonics2021@peytzsend.com&gt;
+<br>
+<b>Sent:</b> 11. oktober 2022 22:59<br>
+<b>To:</b> Sales-EU &lt;sales-eu@nktphotonics.com&gt;<br>
+<b>Subject:</b> Web message: quote for PiLas PiL106X head<o:p></o:p></span>=
+</p>
+</div>
+</div>
+<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
+<table class=3D"MsoNormalTable" border=3D"0" cellspacing=3D"0" cellpadding=
+=3D"0" width=3D"99%" style=3D"width:99.0%;background:#EAEAEA">
+<tbody>
+<tr>
+<td style=3D"padding:.5pt .5pt .5pt .5pt">
+<table class=3D"MsoNormalTable" border=3D"0" cellspacing=3D"0" cellpadding=
+=3D"0" width=3D"100%" style=3D"width:100.0%;background:white">
+<tbody>
+<tr>
+<td colspan=3D"2" style=3D"background:#EAF2FA;padding:2.5pt 2.5pt 2.5pt 2.5=
+pt">
+<p class=3D"MsoNormal"><strong><span style=3D"font-size:9.0pt;font-family:&=
+quot;Arial&quot;,sans-serif;color:black">First name</span></strong><span st=
+yle=3D"color:black">
+</span><o:p></o:p></p>
+</td>
+</tr>
+<tr>
+<td width=3D"20" style=3D"width:15.0pt;padding:2.5pt 2.5pt 2.5pt 2.5pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">&nbsp;</span><o:p></o:p>=
+</p>
+</td>
+<td style=3D"padding:2.5pt 2.5pt 2.5pt 2.5pt">
+<p class=3D"MsoNormal"><span style=3D"font-size:9.0pt;font-family:&quot;Ari=
+al&quot;,sans-serif;color:black">rony</span><span style=3D"color:black">
+</span><o:p></o:p></p>
+</td>
+</tr>
+<tr>
+<td colspan=3D"2" style=3D"background:#EAF2FA;padding:2.5pt 2.5pt 2.5pt 2.5=
+pt">
+<p class=3D"MsoNormal"><strong><span style=3D"font-size:9.0pt;font-family:&=
+quot;Arial&quot;,sans-serif;color:black">Last name</span></strong><span sty=
+le=3D"color:black">
+</span><o:p></o:p></p>
+</td>
+</tr>
+<tr>
+<td width=3D"20" style=3D"width:15.0pt;padding:2.5pt 2.5pt 2.5pt 2.5pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">&nbsp;</span><o:p></o:p>=
+</p>
+</td>
+<td style=3D"padding:2.5pt 2.5pt 2.5pt 2.5pt">
+<p class=3D"MsoNormal"><span style=3D"font-size:9.0pt;font-family:&quot;Ari=
+al&quot;,sans-serif;color:black">kuriakose</span><span style=3D"color:black=
+">
+</span><o:p></o:p></p>
+</td>
+</tr>
+<tr>
+<td colspan=3D"2" style=3D"background:#EAF2FA;padding:2.5pt 2.5pt 2.5pt 2.5=
+pt">
+<p class=3D"MsoNormal"><strong><span style=3D"font-size:9.0pt;font-family:&=
+quot;Arial&quot;,sans-serif;color:black">Subject</span></strong><span style=
+=3D"color:black">
+</span><o:p></o:p></p>
+</td>
+</tr>
+<tr>
+<td width=3D"20" style=3D"width:15.0pt;padding:2.5pt 2.5pt 2.5pt 2.5pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">&nbsp;</span><o:p></o:p>=
+</p>
+</td>
+<td style=3D"padding:2.5pt 2.5pt 2.5pt 2.5pt">
+<p class=3D"MsoNormal"><span style=3D"font-size:9.0pt;font-family:&quot;Ari=
+al&quot;,sans-serif;color:black">quote for PiLas PiL106X head</span><span s=
+tyle=3D"color:black">
+</span><o:p></o:p></p>
+</td>
+</tr>
+<tr>
+<td colspan=3D"2" style=3D"background:#EAF2FA;padding:2.5pt 2.5pt 2.5pt 2.5=
+pt">
+<p class=3D"MsoNormal"><strong><span style=3D"font-size:9.0pt;font-family:&=
+quot;Arial&quot;,sans-serif;color:black">Email</span></strong><span style=
+=3D"color:black">
+</span><o:p></o:p></p>
+</td>
+</tr>
+<tr>
+<td width=3D"20" style=3D"width:15.0pt;padding:2.5pt 2.5pt 2.5pt 2.5pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">&nbsp;</span><o:p></o:p>=
+</p>
+</td>
+<td style=3D"padding:2.5pt 2.5pt 2.5pt 2.5pt">
+<p class=3D"MsoNormal"><span style=3D"font-size:9.0pt;font-family:&quot;Ari=
+al&quot;,sans-serif;color:black"><a href=3D"mailto:rkuriakose@tlabs.ac.za">=
+rkuriakose@tlabs.ac.za</a></span><span style=3D"color:black">
+</span><o:p></o:p></p>
+</td>
+</tr>
+<tr>
+<td colspan=3D"2" style=3D"background:#EAF2FA;padding:2.5pt 2.5pt 2.5pt 2.5=
+pt">
+<p class=3D"MsoNormal"><strong><span style=3D"font-size:9.0pt;font-family:&=
+quot;Arial&quot;,sans-serif;color:black">Phone</span></strong><span style=
+=3D"color:black">
+</span><o:p></o:p></p>
+</td>
+</tr>
+<tr>
+<td width=3D"20" style=3D"width:15.0pt;padding:2.5pt 2.5pt 2.5pt 2.5pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">&nbsp;</span><o:p></o:p>=
+</p>
+</td>
+<td style=3D"padding:2.5pt 2.5pt 2.5pt 2.5pt">
+<p class=3D"MsoNormal"><span style=3D"font-size:9.0pt;font-family:&quot;Ari=
+al&quot;,sans-serif;color:black">0027767947516</span><span style=3D"color:b=
+lack">
+</span><o:p></o:p></p>
+</td>
+</tr>
+<tr>
+<td colspan=3D"2" style=3D"background:#EAF2FA;padding:2.5pt 2.5pt 2.5pt 2.5=
+pt">
+<p class=3D"MsoNormal"><strong><span style=3D"font-size:9.0pt;font-family:&=
+quot;Arial&quot;,sans-serif;color:black">Message</span></strong><span style=
+=3D"color:black">
+</span><o:p></o:p></p>
+</td>
+</tr>
+<tr>
+<td width=3D"20" style=3D"width:15.0pt;padding:2.5pt 2.5pt 2.5pt 2.5pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">&nbsp;</span><o:p></o:p>=
+</p>
+</td>
+<td style=3D"padding:2.5pt 2.5pt 2.5pt 2.5pt">
+<p class=3D"MsoNormal"><span style=3D"font-size:9.0pt;font-family:&quot;Ari=
+al&quot;,sans-serif;color:black">I want a quote for the component mentioned=
+ in subject line</span><span style=3D"color:black">
+</span><o:p></o:p></p>
+</td>
+</tr>
+<tr>
+<td colspan=3D"2" style=3D"background:#EAF2FA;padding:2.5pt 2.5pt 2.5pt 2.5=
+pt">
+<p class=3D"MsoNormal"><strong><span style=3D"font-size:9.0pt;font-family:&=
+quot;Arial&quot;,sans-serif;color:black">Region</span></strong><span style=
+=3D"color:black">
+</span><o:p></o:p></p>
+</td>
+</tr>
+<tr>
+<td width=3D"20" style=3D"width:15.0pt;padding:2.5pt 2.5pt 2.5pt 2.5pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">&nbsp;</span><o:p></o:p>=
+</p>
+</td>
+<td style=3D"padding:2.5pt 2.5pt 2.5pt 2.5pt">
+<p class=3D"MsoNormal"><span style=3D"font-size:9.0pt;font-family:&quot;Ari=
+al&quot;,sans-serif;color:black">Europe / Middle East / Africa</span><span =
+style=3D"color:black">
+</span><o:p></o:p></p>
+</td>
+</tr>
+<tr>
+<td colspan=3D"2" style=3D"background:#EAF2FA;padding:2.5pt 2.5pt 2.5pt 2.5=
+pt">
+<p class=3D"MsoNormal"><strong><span style=3D"font-size:9.0pt;font-family:&=
+quot;Arial&quot;,sans-serif;color:black">Country</span></strong><span style=
+=3D"color:black">
+</span><o:p></o:p></p>
+</td>
+</tr>
+<tr>
+<td width=3D"20" style=3D"width:15.0pt;padding:2.5pt 2.5pt 2.5pt 2.5pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">&nbsp;</span><o:p></o:p>=
+</p>
+</td>
+<td style=3D"padding:2.5pt 2.5pt 2.5pt 2.5pt">
+<p class=3D"MsoNormal"><span style=3D"font-size:9.0pt;font-family:&quot;Ari=
+al&quot;,sans-serif;color:black">South africa</span><span style=3D"color:bl=
+ack">
+</span><o:p></o:p></p>
+</td>
+</tr>
+<tr>
+<td colspan=3D"2" style=3D"background:#EAF2FA;padding:2.5pt 2.5pt 2.5pt 2.5=
+pt">
+<p class=3D"MsoNormal"><strong><span style=3D"font-size:9.0pt;font-family:&=
+quot;Arial&quot;,sans-serif;color:black">Newsletter</span></strong><span st=
+yle=3D"color:black">
+</span><o:p></o:p></p>
+</td>
+</tr>
+<tr>
+<td width=3D"20" style=3D"width:15.0pt;padding:2.5pt 2.5pt 2.5pt 2.5pt">
+<p class=3D"MsoNormal"><span style=3D"color:black">&nbsp;</span><o:p></o:p>=
+</p>
+</td>
+<td style=3D"padding:2.5pt 2.5pt 2.5pt 2.5pt">
+<ul type=3D"disc">
+<li class=3D"MsoNormal" style=3D"mso-margin-top-alt:auto;mso-margin-bottom-=
+alt:auto;mso-list:l0 level1 lfo1">
+<span style=3D"font-size:9.0pt;font-family:&quot;Arial&quot;,sans-serif;col=
+or:black">Sign up to our newsletter and stay in the loop. We keep your name=
+ and email according to our
+<a href=3D"https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2=
+F%2Fwww.nktphotonics.com%2Fprivacy-policy%2F&amp;data=3D05%7C01%7CBruno.Lef=
+evre%40nktphotonics.com%7C34c70a8cfa54489612a508daabcb607b%7Ca0dffdfb71d149=
+d98f0015e03257d706%7C0%7C0%7C638011187234250752%7CUnknown%7CTWFpbGZsb3d8eyJ=
+WIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7=
+C%7C&amp;sdata=3DpTWY5oLjIT6%2FP3JWL%2BDL%2Fw3tDzsNKTgQFGBFaXeEDIU%3D&amp;r=
+eserved=3D0">
+privacy policy</a> and you can unsubscribe at any time.</span><span style=
+=3D"font-size:9.0pt;font-family:&quot;Arial&quot;,sans-serif"><o:p></o:p></=
+span></li></ul>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+<p class=3D"MsoNormal">Generated on: <a href=3D"https://www.nktphotonics.co=
+m/contact/">
+https://www.nktphotonics.com/contact/</a><o:p></o:p></p>
+</div>
+</body>
+</html>
+
+--_000_PR3PR02MB64426BB6CD0637213A917CA29E229PR3PR02MB6442eurp_--
+
+--_007_PR3PR02MB64426BB6CD0637213A917CA29E229PR3PR02MB6442eurp_
+Content-Type: image/jpeg; name="image001.jpg"
+Content-Description: image001.jpg
+Content-Disposition: inline; filename="image001.jpg"; size=719;
+	creation-date="Wed, 12 Oct 2022 04:58:57 GMT";
+	modification-date="Wed, 12 Oct 2022 04:58:57 GMT"
+Content-ID: <image001.jpg@01D8DE08.188C1D50>
+Content-Transfer-Encoding: base64
+
+/9j/4AAQSkZJRgABAQEAeAB4AAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0a
+HBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIy
+MjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAAUABQDASIA
+AhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQA
+AAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3
+ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWm
+p6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEA
+AwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSEx
+BhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElK
+U1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3
+uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD0xVku
+pZGaRd2C5LtjNQ5q5p7xo8/mFQDCwG71q9JdQv50JeIxfZht4HL/AF9aAM2G9ubdNkUzKuc4oqvR
+QBYvYVt7yWJM7VbjNV6KKANzTNMtrmzEsoYsWPeiiigD/9k=
+
+--_007_PR3PR02MB64426BB6CD0637213A917CA29E229PR3PR02MB6442eurp_
+Content-Type: image/jpeg; name="image002.jpg"
+Content-Description: image002.jpg
+Content-Disposition: inline; filename="image002.jpg"; size=724;
+	creation-date="Wed, 12 Oct 2022 04:58:57 GMT";
+	modification-date="Wed, 12 Oct 2022 04:58:57 GMT"
+Content-ID: <image002.jpg@01D8DE08.188C1D50>
+Content-Transfer-Encoding: base64
+
+/9j/4AAQSkZJRgABAQEAeAB4AAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0a
+HBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIy
+MjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAAUABQDASIA
+AhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQA
+AAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3
+ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWm
+p6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEA
+AwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSEx
+BhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElK
+U1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3
+uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD0o+bc
+SMx3O5yzHqaeLS4Nt9oEZ8n+9mnWE/2a9jlLBQOCT6VoarqkM9v9nt+VJyzYwKAM6G9ubdNkUzKu
+c4oqvRQBYvYVt7yWJM7VbjNV6KKANzTNMtrmzEsoYsWPeiiigD//2Q==
+
+--_007_PR3PR02MB64426BB6CD0637213A917CA29E229PR3PR02MB6442eurp_
+Content-Type: image/jpeg; name="image003.jpg"
+Content-Description: image003.jpg
+Content-Disposition: inline; filename="image003.jpg"; size=730;
+	creation-date="Wed, 12 Oct 2022 04:58:57 GMT";
+	modification-date="Wed, 12 Oct 2022 04:58:57 GMT"
+Content-ID: <image003.jpg@01D8DE08.188C1D50>
+Content-Transfer-Encoding: base64
+
+/9j/4AAQSkZJRgABAQEAeAB4AAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0a
+HBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIy
+MjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAAUABQDASIA
+AhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQA
+AAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3
+ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWm
+p6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEA
+AwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSEx
+BhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElK
+U1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3
+uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD0oCS5
+lZi25iCzMT2HJqR7R1UurK6hA+QccH60224kLeZsZVJXnG4+madduryK6gKzL86Kchcdh/hQAQ3t
+zbpsimZVznFFV6KALF7CtveSxJnarcZqvRRQBuaZpltc2YllDFix70UUUAf/2Q==
+
+--_007_PR3PR02MB64426BB6CD0637213A917CA29E229PR3PR02MB6442eurp_
+Content-Type: image/png; name="image004.png"
+Content-Description: image004.png
+Content-Disposition: inline; filename="image004.png"; size=7863;
+	creation-date="Wed, 12 Oct 2022 04:58:57 GMT";
+	modification-date="Wed, 12 Oct 2022 04:58:57 GMT"
+Content-ID: <image004.png@01D8DE08.188C1D50>
+Content-Transfer-Encoding: base64
+
+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
+
+--_007_PR3PR02MB64426BB6CD0637213A917CA29E229PR3PR02MB6442eurp_--
